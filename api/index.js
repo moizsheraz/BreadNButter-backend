@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const user = require("../routes/userRoutes");
-const auth = require('../auth');
 const app = express();
 require('dotenv').config();
 
@@ -18,11 +17,6 @@ mongoose
   console.log(`Mongodb connected with server: ${data.connection.host}`);
 });
 
-
-const User = mongoose.model('User', new mongoose.Schema({
-  email: String,
-  password: String,
-}));
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

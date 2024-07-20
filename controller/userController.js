@@ -44,34 +44,35 @@ exports.signupUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  // try {
+  //   const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
+  //   const user = await User.findOne({ email });
+  //   const isPasswordCorrect = await bcrypt.compare(
+  //     password,
+  //     user?.password || ""
+  //   );
 
-    if (!user || !isPasswordCorrect) {
-      return res.status(400).json({
-        error: "Invalid credentials",
-      });
-    }
+  //   if (!user || !isPasswordCorrect) {
+  //     return res.status(400).json({
+  //       error: "Invalid credentials",
+  //     });
+  //   }
 
-    const token = generateTokenAndSetCookies(user._id, res);
-    console.log(token);
-    res.status(201).json({
-      data: user,
-      token,
-      message: "login successful",
-    });
-  } catch (error) {
-    console.log("Error in login controller", error.message);
-    res.status(500).json({
-      error: "Internal server error",
-    });
-  }
+  //   const token = generateTokenAndSetCookies(user._id, res);
+  //   console.log(token);
+  //   res.status(201).json({
+  //     data: user,
+  //     token,
+  //     message: "login successful",
+  //   });
+  // } catch (error) {
+  //   console.log("Error in login controller", error.message);
+  //   res.status(500).json({
+  //     error: "Internal server error",
+  //   });
+  // }
+  console.log("I have reched ehere")
 };
 
 exports.logoutUser = async (req, res) => {
