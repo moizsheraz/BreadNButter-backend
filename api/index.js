@@ -36,29 +36,18 @@ app.get("/health", (req, res) => {
 app.use("/api/v1", user);
 app.use("/api/v1", quarter);
 app.use("/api/v1/quarter2", quarter2);
-// app.use("/api/v1", income);
+app.use("/api/v1", income);
 app.use("/api/v1", admin);
 
 
-const getIncomeStatement = async (req, res) => {
-  try {
-    const incomeStatement = await IncomeStatement.find();
-
-    res.status(201).json(incomeStatement[0].income);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-app.get("/api/v1/incomeStatement", getIncomeStatement);
 
 
 // Connect to MongoDB
-const DB = process.env.DB_URL.replace("<PASSWORD>", process.env.DB_PASSWORD);
+// const DB = process.env.DB_URL.replace("<PASSWORD>", process.env.DB_PASSWORD);
 
 const connectToMongodb = async () => {
   try {
-    await mongoose.connect(DB);
+    await mongoose.connect("mongodb+srv://sherazmoiz9:FMGxSK0XXAOR42S0@cluster0.l6qfsrz.mongodb.net/breadnButter");
     console.log("Connected to MongoDB");
   } catch (error) {
     console.log("Error in connecting to MongoDB", error.message);
