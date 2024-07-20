@@ -31,11 +31,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 // Route imports
-const user = require("../routes/userRoutes");
-const quarter = require("../routes/quarterRoutes");
-const income = require("../routes/IncomeRoutes");
-const admin = require("../routes/adminRoute");
-const quarter2 = require("../routes/quarter2Route");
+const user = require("./routes/userRoutes");
+const quarter = require("./routes/quarterRoutes");
+const income = require("./routes/IncomeRoutes");
+const admin = require("./routes/adminRoute");
+const quarter2 = require("./routes/quarter2Route");
 
 // Health check endpoint
 app.get("/health", (req, res) => {
