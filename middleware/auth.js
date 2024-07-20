@@ -35,7 +35,6 @@ exports.authorizedRole = (...roles) => {
         message: `${req.user.role} is not authorized to perform this action`,
       });
     }
-
     next();
   };
 };
