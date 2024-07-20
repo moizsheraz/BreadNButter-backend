@@ -12,7 +12,7 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://bread-n-butter-client.vercel.app",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 204,
 };
