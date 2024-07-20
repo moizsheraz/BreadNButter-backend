@@ -35,8 +35,21 @@ app.get("/health", (req, res) => {
 app.use("/api/v1", user);
 app.use("/api/v1", quarter);
 app.use("/api/v1/quarter2", quarter2);
-app.use("/api/v1", income);
+// app.use("/api/v1", income);
 app.use("/api/v1", admin);
+
+
+const getIncomeStatement = async (req, res) => {
+  try {
+    const incomeStatement = await IncomeStatement.find();
+
+    res.status(201).json(incomeStatement[0].income);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+app.get("/api/v1/incomeStatement", getIncomeStatement);
 
 
 // Connect to MongoDB
