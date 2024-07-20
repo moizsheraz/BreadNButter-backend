@@ -12,7 +12,7 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin: "https://bread-n-butter-client.vercel.app",
+  origin: "http://localhost:3000",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 204,
 };
@@ -38,9 +38,6 @@ app.use("/api/v1/quarter2", quarter2);
 app.use("/api/v1", income);
 app.use("/api/v1", admin);
 
-
-
-
 // Connect to MongoDB
 const DB = process.env.DB_URL.replace("<PASSWORD>", process.env.DB_PASSWORD);
 
@@ -59,7 +56,5 @@ app.listen(PORT, () => {
   connectToMongodb();
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-app.get("/", (req, res) => res.send("Express on Vercel"));
-
 
 module.exports = app;
