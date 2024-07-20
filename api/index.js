@@ -56,6 +56,7 @@ app.listen(PORT, () => {
   connectToMongodb();
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+app.get("/", (req, res) => res.send("Express on Vercel"));
 
 
 module.exports = app;
