@@ -1,97 +1,73 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const User = require("../Model/userModel");
-const bcrypt = require("bcryptjs");
-const generateTokenAndSetCookies = require("../utils/generateToken");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-// Load environment variables
-dotenv.config();
-
-// Initialize Express app
+const auth = require('../auth');
 const app = express();
+require('dotenv').config();
 
-// Middleware
-const corsOptions = {
-  origin: "https://bread-n-butter-client.vercel.app",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-};
-app.use(cors(corsOptions));
-app.use(cookieParser());
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(cors());
 
-// Import routes
-// const user = require("../routes/userRoutes");
-// const quarter = require("../routes/quarterRoutes");
-// const income = require("../routes/IncomeRoutes");
-// const admin = require("../routes/adminRoute");
-// const quarter2 = require("../routes/quarter2Route");
-
-// Route handlers
-app.get("/health", (req, res) => {
-  res.status(200).json("Health checking");
-});
-app.post("/api/v1/login",async(req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
-
-    if (!user || !isPasswordCorrect) {
-      return res.status(400).json({
-        error: "Invalid credentials",
-      });
-    }
-
-    const token = generateTokenAndSetCookies(user._id, res);
-    console.log(token);
-    res.status(201).json({
-      data: user,
-      token,
-      message: "login successful",
-    });
-  } catch (error) {
-    console.log("Error in login controller", error.message);
-    res.status(500).json({
-      error: "Internal server error",
-    });
-  }
+mongoose
+.connect("mongodb+srv://sherazmoiz9:FMGxSK0XXAOR42S0@cluster0.l6qfsrz.mongodb.net/buygold", {
 })
-
-// app.use("/api/v1", user);
-// app.use("/api/v1", quarter);
-// app.use("/api/v1/quarter2", quarter2);
-// app.use("/api/v1", income);
-// app.use("/api/v1", admin);
-
-
-
-
-// Connect to MongoDB
-// const DB = process.env.DB_URL.replace("<PASSWORD>", process.env.DB_PASSWORD);
-
-const connectToMongodb = async () => {
-  try {
-    await mongoose.connect("mongodb+srv://sherazmoiz9:FMGxSK0XXAOR42S0@cluster0.l6qfsrz.mongodb.net/breadnButter");
-    console.log("Connected to MongoDB");
-  } catch (error) {
-    console.log("Error in connecting to MongoDB", error.message);
-  }
-};
-
-// Start server and connect to MongoDB
-const PORT = process.env.PORT || 7000;
-app.listen(PORT, () => {
-  connectToMongodb();
-  console.log(`Server is running on http://localhost:${PORT}`);
+.then((data) => {
+  console.log(`Mongodb connected with server: ${data.connection.host}`);
 });
-app.get("/", (req, res) => res.send("Express on Vercel"));
+
+
+const User = mongoose.model('User', new mongoose.Schema({
+  email: String,
+  password: String,
+}));
+
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+
+// User signup endpoint
+app.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = new User({ email, password: hashedPassword });
+  await user.save();
+  res.status(201).send({ message: 'User created' });
+});
+
+// User login endpoint
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send({ message: 'Invalid email or password' });
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(400).send({ message: 'Invalid email or password' });
+
+  const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
+
+  // Exclude the password from the user data
+  const { password: userPassword, ...userData } = user.toObject();
+
+  res.send({ token, user: userData });
+});
+
+// Support form endpoint
+
+// forget-password endpoint
+
+
+
+app.listen(5000, () => {
+  console.log('Server running on port 5000');
+});
+
+app.get('/', (req, res) => {
+  res.send('Server is running..');
+})
 
 
 module.exports = app;
