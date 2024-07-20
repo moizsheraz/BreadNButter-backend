@@ -56,3 +56,6 @@ app.listen(PORT, () => {
   connectToMongodb();
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+module.exports = app;
