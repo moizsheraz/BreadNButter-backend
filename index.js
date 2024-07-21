@@ -18,10 +18,10 @@ const connectToMongodb = async () => {
   } catch (error) {
     console.log("Error in connecting to Mongodb", error.message);
   }
-};
+}
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://bread-n-butter-client.vercel.app",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 204,
 };
